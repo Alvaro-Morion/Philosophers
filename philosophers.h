@@ -12,14 +12,16 @@
 
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
-# include <stdio.h>
+# include<stdio.h>
+# include<stdlib.h>
 typedef struct s_args
 {
-    int nphilo;
-    int deadtime;
-    int etime;
-    int stime;
-    int maxe;
-} t_args;
-#endif
+	int	nphilo;
+	int	dead_time;
+	int	eat_time;
+	int	sleep_time;
+	int	max_meals;
+}	t_args;
 
+int	ft_atoi(const char *nptr);
+#endif

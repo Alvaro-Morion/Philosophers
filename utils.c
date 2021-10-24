@@ -1,3 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: amorion- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/10/24 09:31:06 by amorion-          #+#    #+#             */
+/*   Updated: 2021/10/24 09:31:43 by amorion-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "philosophers.h"
+
 int	ft_atoi(const char *nptr)
 {
 	int	n;
@@ -14,11 +28,6 @@ int	ft_atoi(const char *nptr)
 			s = -1;
 		nptr++;
 	}
-    if (*nptr>='9' || *nptr <= '0')
-    {
-        printf("Unable to convert %s to an integer\n", nptr);
-        return(-1);
-    }
 	while (*nptr <= '9' && *nptr >= '0')
 	{
 		n = n * 10 + *nptr - '0';
