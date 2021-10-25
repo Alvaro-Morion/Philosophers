@@ -54,12 +54,24 @@ t_args	ft_assign_args(int argc, char **argv)
 	return (args);
 }
 
+pthread_mutex_t	*ft_create_forks(int num)
+{
+	pthread_mutex_t	*forks;
+	forks = malloc(num);
+	return(forks);
+}
+
 int	main(int argc, char **argv)
 {	
-	t_args	args;
+	t_args			args;
+	pthread_mutex_t	*forks;
 
 	if (ft_check_errors(argc, argv))
 		return (0);
 	args = ft_assign_args(argc, argv);
+	forks = ft_create_forks(args.nphilo);
+	if (!forks)
+		return(0);
+	ft_philosophers(args, forks);
 	return (0);
 }

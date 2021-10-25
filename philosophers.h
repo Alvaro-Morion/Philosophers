@@ -14,6 +14,7 @@
 # define PHILOSOPHERS_H
 # include<stdio.h>
 # include<stdlib.h>
+# include<pthread.h>
 typedef struct s_args
 {
 	int	nphilo;
@@ -23,5 +24,13 @@ typedef struct s_args
 	int	max_meals;
 }	t_args;
 
-int	ft_atoi(const char *nptr);
+typedef struct s_philo
+{
+	int				num;
+	pthread_t 		*thread;
+	pthread_mutex_t forks[2];
+}	t_philo;
+
+int		ft_atoi(const char *nptr);
+void    ft_philosophers(t_args args, pthread_mutex_t *forks);
 #endif
