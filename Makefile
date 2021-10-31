@@ -19,10 +19,10 @@ NAME = philo
 all: ${NAME}
 
 .c.o:
-	@gcc -Wall -Werror -Wextra -c $< -o ${<:.c=.o}
+	@gcc -Wall -Werror -Wextra -pthread -g -c $< -o ${<:.c=.o}
 
 ${NAME}: ${OBJS}
-	@gcc -Wall -Werror -Wextra ${OBJS} -o ${NAME}
+	@gcc -Wall -Werror -Wextra -pthread -g ${OBJS} -o ${NAME}
 	@echo "binary generated"
 clean:
 	@echo "o files deleted"

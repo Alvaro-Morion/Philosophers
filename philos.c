@@ -12,39 +12,45 @@
 
 #include "philosophers.h"
 
-void   *ft_routine(t_philo *philo)
-{
-	printf("Philosopher %d created", philo->num);
-	return(0);
-}
-int	ft_init_philo(int i, t_args args, pthread_mutex_t *fork)
-{
+void	*ft_routine(void *philos)
+{ 
 	t_philo *philo;
-	philo = malloc(t_philo);
-	philo->num = i;
-	philo->forks[0] = fork[i - 1];
-	if (i == args.nphilo)
-		philo->forks[1] = fork[0];
-	else
-		philo->forks[1] = fork[i];
-	if (pthread_create(philo->thread, NULL, ft_routine, philo))
-	{
-		printf("Unable to create thread for %d philosopher", i);
-		free(philo);
-		return(1);
-	}
-	free(philo);
-	return(0);
+	philo = philos;
+		printf("Philospher %d is thinking\n", philo->num + 1);
+		usleep(100);
+		printf("Philosopher %d woke up\n", philo->num+1);
+	return(philo);
 }
 
-void    ft_philosophers(t_args args, pthread_mutex_t *forks)
+t_philo	ft_philo_init(int i, t_args *args, pthread_mutex_t *forks)
 {
-	int i;
-	i = 1;
-	while (i < args.nphilo)
-	{      
-		if (ft_init_philo(i, args, forks))
+	t_philo philo;
+
+	philo.num = i;
+	philo.args = args;
+	philo.forks[0] = forks[i];
+	philo.forks[1] = forks[(i+1)% args->nphilo];
+	return(philo);
+}
+
+void    ft_philosophers(t_args *args, pthread_mutex_t *forks)
+{
+	int			i;
+	pthread_t	*philosophers;
+	t_philo		*philo;
+
+	i = 0;
+	philosophers = malloc(args->nphilo);
+	philo = malloc(args->nphilo);
+	while(i < args->nphilo)
+	{
+		printf(" "); // Cuando no se pone esto da un error extraño.-
+		philo[i]= ft_philo_init(i, args, forks);
+		if(pthread_create(&philosophers[i], NULL, ft_routine, &philo[i]))
+		{
 			break;
+		}
+		pthread_join(philosophers[i], NULL);
 		i++;
 	}
 }
