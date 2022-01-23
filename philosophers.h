@@ -16,6 +16,7 @@
 # include<stdlib.h>
 # include<pthread.h>
 # include<unistd.h>
+# include<sys/time.h>
 typedef struct s_args
 {
 	int	nphilo;
@@ -29,9 +30,12 @@ typedef struct s_philo
 {
 	int				num;
 	t_args			*args;
-	pthread_mutex_t forks[2];
+	pthread_mutex_t *forks[2];
 }	t_philo;
 
-int		ft_atoi(const char *nptr);
-void    ft_philosophers(t_args *args, pthread_mutex_t *forks);
+int				ft_atoi(const char *nptr);
+void    		ft_philosophers(t_args *args, pthread_mutex_t *forks);
+pthread_mutex_t	*ft_create_forks(int num);
+void 			take_fork(t_philo *philo);
+void 			release_fork(t_philo *philo);
 #endif

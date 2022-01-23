@@ -56,13 +56,6 @@ t_args	*ft_assign_args(int argc, char **argv)
 	return (args);
 }
 
-pthread_mutex_t	*ft_create_forks(int num)
-{
-	pthread_mutex_t	*forks;
-	forks = malloc(num);
-	return(forks);
-}
-
 int	main(int argc, char **argv)
 {	
 	t_args			*args;

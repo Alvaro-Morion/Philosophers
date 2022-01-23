@@ -16,41 +16,39 @@ void	*ft_routine(void *philos)
 { 
 	t_philo *philo;
 	philo = philos;
-		printf("Philospher %d is thinking\n", philo->num + 1);
-		usleep(100);
-		printf("Philosopher %d woke up\n", philo->num+1);
-	return(philo);
+	int i;
+	i = 0;
+	while(i < 5)
+	{
+		printf("Philosopher %d is thinking\n", philo->num);
+		take_fork(philo);
+		printf("Philosopher %d is eating\n", philo->num);
+		usleep(philo->args->eat_time);
+		release_fork(philo);
+		printf("Philosopher %d is sleeping\n",philo->num);
+		usleep(philo->args->sleep_time);
+		i++;
+	} 
+	return(0);
 }
 
-t_philo	ft_philo_init(int i, t_args *args, pthread_mutex_t *forks)
+void	ft_philo_init(t_philo *philo, int i, t_args *args, pthread_mutex_t *forks)
 {
-	t_philo philo;
-
-	philo.num = i;
-	philo.args = args;
-	philo.forks[0] = forks[i];
-	philo.forks[1] = forks[(i+1)% args->nphilo];
-	return(philo);
+	philo->num = i+1;
+	philo->args = args;
+	philo->forks[0] = &forks[i];
+	philo->forks[1] = &forks[(i+1) % args->nphilo];
 }
 
-void    ft_philosophers(t_args *args, pthread_mutex_t *forks)
+void ft_philosophers(t_args *args, pthread_mutex_t *forks)
 {
-	int			i;
-	pthread_t	*philosophers;
-	t_philo		*philo;
+	t_philo philos[args->nphilo];
+	int i;
 
 	i = 0;
-	philosophers = malloc(args->nphilo);
-	philo = malloc(args->nphilo);
 	while(i < args->nphilo)
 	{
-		printf(" "); // Cuando no se pone esto da un error extraño.-
-		philo[i]= ft_philo_init(i, args, forks);
-		if(pthread_create(&philosophers[i], NULL, ft_routine, &philo[i]))
-		{
-			break;
-		}
-		pthread_join(philosophers[i], NULL);
+		ft_philo_init(&philos[i], i, args, forks);
 		i++;
 	}
 }
