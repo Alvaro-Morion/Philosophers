@@ -14,9 +14,10 @@
 
 void	*ft_routine(void *philos)
 { 
-	t_philo *philo;
-	philo = philos;
 	int i;
+	t_philo *philo;
+	
+	philo = (t_philo *)philos;
 	i = 0;
 	while(i < 5)
 	{
@@ -31,24 +32,26 @@ void	*ft_routine(void *philos)
 	} 
 	return(0);
 }
-
-void	ft_philo_init(t_philo *philo, int i, t_args *args, pthread_mutex_t *forks)
+void	ft_philo_init(t_philo *philo, int pos, pthread_mutex_t *forks, t_args *args)
 {
-	philo->num = i+1;
+	philo->num = pos + 1;
 	philo->args = args;
-	philo->forks[0] = &forks[i];
-	philo->forks[1] = &forks[(i+1) % args->nphilo];
+	philo->forks[0] = forks[pos];
+	philo->forks[1] = forks[philo->num % args->nphilo];
+	printf("Philosopher %d created. Fork 1 = %d Fork 2 = %d\n", philo->num, pos, philo->num % args->nphilo);
 }
 
-void ft_philosophers(t_args *args, pthread_mutex_t *forks)
+void	ft_philosophers(t_args *args, pthread_mutex_t *forks)
 {
-	t_philo philos[args->nphilo];
 	int i;
+	t_philo philo[args->nphilo];
+	pthread_t philos[args->nphilo];
 
 	i = 0;
 	while(i < args->nphilo)
 	{
-		ft_philo_init(&philos[i], i, args, forks);
+		ft_philo_init(&philo[i], i, forks, args);
+		pthread_create(&philos[i], NULL, ft_routine, &philo[i]);
 		i++;
 	}
 }

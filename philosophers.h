@@ -30,7 +30,7 @@ typedef struct s_philo
 {
 	int				num;
 	t_args			*args;
-	pthread_mutex_t *forks[2];
+	pthread_mutex_t forks[2];
 }	t_philo;
 
 int				ft_atoi(const char *nptr);

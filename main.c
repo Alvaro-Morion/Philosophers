@@ -33,7 +33,7 @@ int	ft_check_errors(int argc, char **argv)
 	{
 		if (ft_atoi(argv[i]) < 1)
 		{
-			printf("parameter %s is invalid", params[i - 1]);
+			printf("%s is invalid\n", params[i - 1]);
 			return (1);
 		}
 		i++;
@@ -41,10 +41,8 @@ int	ft_check_errors(int argc, char **argv)
 	return (0);
 }
 
-t_args	*ft_assign_args(int argc, char **argv)
+void	ft_assign_args(int argc, char **argv, t_args *args)
 {
-	t_args	*args;
-	args = malloc(1);
 	args->nphilo = ft_atoi(argv[1]);
 	args->dead_time = ft_atoi(argv[2]);
 	args->eat_time = ft_atoi(argv[3]);
@@ -53,20 +51,19 @@ t_args	*ft_assign_args(int argc, char **argv)
 		args->max_meals = ft_atoi(argv[5]);
 	else
 		args->max_meals = -1;
-	return (args);
 }
 
 int	main(int argc, char **argv)
 {	
-	t_args			*args;
+	t_args			args;
 	pthread_mutex_t	*forks;
 
 	if (ft_check_errors(argc, argv))
 		return (0);
-	args = ft_assign_args(argc, argv);
-	forks = ft_create_forks(args->nphilo);
+	ft_assign_args(argc, argv, &args);
+	forks = ft_create_forks(args.nphilo);
 	if (!forks)
-		return(0);
-	ft_philosophers(args, forks);
+		return(-1);
+	ft_philosophers(&args, forks);
 	return (0);
 }
