@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "./philosophers.h"
 
 int	ft_check_errors(int argc, char **argv)
 {

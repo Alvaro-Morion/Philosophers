@@ -24,13 +24,15 @@ typedef struct s_args
 	int	eat_time;
 	int	sleep_time;
 	int	max_meals;
+	int t_start;
 }	t_args;
 
 typedef struct s_philo
 {
 	int				num;
+	int				n_meals;
 	t_args			*args;
-	pthread_mutex_t forks[2];
+	pthread_mutex_t *forks[2];
 }	t_philo;
 
 int				ft_atoi(const char *nptr);
