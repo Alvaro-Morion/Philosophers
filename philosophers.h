@@ -19,12 +19,14 @@
 # include<sys/time.h>
 typedef struct s_args
 {
-	int	nphilo;
-	int	dead_time;
-	int	eat_time;
-	int	sleep_time;
-	int	max_meals;
-	int t_start;
+	int				nphilo;
+	int				dead_time;
+	int				eat_time;
+	int				sleep_time;
+	int				max_meals;
+	pthread_mutex_t	*forks;
+	int				start;
+	struct timeval	t0;
 }	t_args;
 
 typedef struct s_philo
@@ -36,8 +38,10 @@ typedef struct s_philo
 }	t_philo;
 
 int				ft_atoi(const char *nptr);
-void    		ft_philosophers(t_args *args, pthread_mutex_t *forks);
+void    		ft_philosophers(t_args *args);
 pthread_mutex_t	*ft_create_forks(int num);
 void 			take_fork(t_philo *philo);
 void 			release_fork(t_philo *philo);
+void			ft_wait(long int time);
+long int		ft_time_stamp(t_args *args);
 #endif

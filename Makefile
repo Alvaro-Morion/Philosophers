@@ -10,7 +10,11 @@
 #                                                                              #
 # **************************************************************************** #
 
-SRCS = main.c philos.c forks.c utils.c
+SRCS	=	main.c		\
+			philos.c	\
+			forks.c		\
+			utils.c		\
+			time.c		
 
 OBJS = ${SRCS:.c=.o}
 

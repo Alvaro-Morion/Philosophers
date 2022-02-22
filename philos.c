@@ -19,17 +19,21 @@ void	*ft_routine(void *philos)
 	
 	philo = (t_philo *)philos;
 	j = 0;
-	while(j < 5)
+	//printf("%d\n", philo->args->start);
+	while(!philo->args->start)
 	{
-		printf("Philosopher %d is thinking\n", philo->num);
+	}
+	while(j < 2)
+	{
+		printf("%ld Philosopher %d is thinking\n",ft_time_stamp(philo->args), philo->num);
 		take_fork(philo);
-		printf("Philosopher %d is eating\n", philo->num);
+		printf("%ld Philosopher %d is eating\n", ft_time_stamp(philo->args), philo->num);
 		usleep(philo->args->eat_time); // crear función específica para manejar el tiempo
 		release_fork(philo);
-		printf("Philosopher %d is sleeping\n",philo->num);
+		printf("%ld Philosopher %d is sleeping\n", ft_time_stamp(philo->args), philo->num);
 		usleep(philo->args->sleep_time);
 		j++;
-	} 
+	}
 	return(0);
 }
 void	ft_philo_init(t_philo *philo, int pos, pthread_mutex_t *forks, t_args *args)
@@ -40,7 +44,7 @@ void	ft_philo_init(t_philo *philo, int pos, pthread_mutex_t *forks, t_args *args
 	philo->forks[1] = &forks[philo->num % args->nphilo];
 }
 
-void	ft_philosophers(t_args *args, pthread_mutex_t *forks)
+void	ft_philosophers(t_args *args)
 {
 	int i;
 	t_philo philo[args->nphilo];
@@ -49,10 +53,18 @@ void	ft_philosophers(t_args *args, pthread_mutex_t *forks)
 	i = 0;
 	while(i < args->nphilo)
 	{
-		ft_philo_init(&philo[i], i, forks, args);
-		pthread_create(&philos[i], 0, ft_routine, &philo[i]);
+		ft_philo_init(&philo[i], i, args->forks, args);
 		i++;
 	}
+	i = 0;
+	while(i < args->nphilo)
+	{
+		pthread_create(&philos[i], 0, ft_routine, &philo[i]);
+		sleep(1);
+		i++;
+	}
+	gettimeofday(&(args->t0), NULL);
+	args->start = 1;
 	i = 0;
 	while (i < args->nphilo)
 	{

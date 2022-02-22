@@ -41,29 +41,31 @@ int	ft_check_errors(int argc, char **argv)
 	return (0);
 }
 
-void	ft_assign_args(int argc, char **argv, t_args *args)
+int	ft_assign_args(int argc, char **argv, t_args *args)
 {
 	args->nphilo = ft_atoi(argv[1]);
 	args->dead_time = ft_atoi(argv[2]);
 	args->eat_time = ft_atoi(argv[3]);
 	args->sleep_time = ft_atoi(argv[4]);
+	args->forks = ft_create_forks(args->nphilo);
+	args->start = 0;
+	if(!args->forks)
+		return(1);
 	if (argc == 6)
 		args->max_meals = ft_atoi(argv[5]);
 	else
 		args->max_meals = -1;
+	return(0);
 }
 
 int	main(int argc, char **argv)
 {	
 	t_args			args;
-	pthread_mutex_t	*forks;
 
 	if (ft_check_errors(argc, argv))
 		return (0);
-	ft_assign_args(argc, argv, &args);
-	forks = ft_create_forks(args.nphilo);
-	if (!forks)
-		return(-1);
-	ft_philosophers(&args, forks);
+	if(ft_assign_args(argc, argv, &args))
+		return(0);
+	ft_philosophers(&args);
 	return (0);
 }
