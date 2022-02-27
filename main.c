@@ -48,7 +48,10 @@ int	ft_assign_args(int argc, char **argv, t_args *args)
 	args->eat_time = ft_atoi(argv[3]);
 	args->sleep_time = ft_atoi(argv[4]);
 	args->forks = ft_create_forks(args->nphilo);
-	args->start = 0;
+	args->output = malloc(1);
+	args->enaugh = 0;
+	args->end = 0;
+	pthread_mutex_init(args->output, NULL);
 	if(!args->forks)
 		return(1);
 	if (argc == 6)
@@ -60,12 +63,14 @@ int	ft_assign_args(int argc, char **argv, t_args *args)
 
 int	main(int argc, char **argv)
 {	
-	t_args			args;
+	t_args	*args;
 
 	if (ft_check_errors(argc, argv))
 		return (0);
-	if(ft_assign_args(argc, argv, &args))
+	args = malloc(1);
+	if(ft_assign_args(argc, argv, args))
 		return(0);
-	ft_philosophers(&args);
+	ft_philosophers(args);
+
 	return (0);
 }

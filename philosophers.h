@@ -25,7 +25,10 @@ typedef struct s_args
 	int				sleep_time;
 	int				max_meals;
 	pthread_mutex_t	*forks;
+	pthread_mutex_t	*output;
 	int				start;
+	int				enaugh;
+	int				end;
 	struct timeval	t0;
 }	t_args;
 
@@ -33,6 +36,7 @@ typedef struct s_philo
 {
 	int				num;
 	int				n_meals;
+	struct timeval	t_meal;
 	t_args			*args;
 	pthread_mutex_t *forks[2];
 }	t_philo;
@@ -40,8 +44,10 @@ typedef struct s_philo
 int				ft_atoi(const char *nptr);
 void    		ft_philosophers(t_args *args);
 pthread_mutex_t	*ft_create_forks(int num);
-void 			take_fork(t_philo *philo);
+int 			take_fork(t_philo *philo);
 void 			release_fork(t_philo *philo);
 void			ft_wait(long int time);
 long int		ft_time_stamp(t_args *args);
+void			ft_print(t_philo *philo, int type);
+void 			ft_death_meals(t_philo *philo, t_args *args);
 #endif

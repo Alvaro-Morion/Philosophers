@@ -27,22 +27,25 @@ pthread_mutex_t	*ft_create_forks(int num)
 	return(forks);
 }
 
-void take_fork(t_philo *philo)
+int take_fork(t_philo *philo)
 {
     if (philo->num < philo->args->nphilo)
     {
         pthread_mutex_lock(philo->forks[0]);
-        printf("%li Philosopher %d has taken a fork\n", ft_time_stamp(philo->args),philo->num);
+        ft_print(philo, 0);
         pthread_mutex_lock(philo->forks[1]);
-        printf("%li Philosopher %d has taken a fork\n", ft_time_stamp(philo->args),philo->num);
+        ft_print(philo, 0);
     }
     else
     {
         pthread_mutex_lock(philo->forks[1]);
-        printf("%li Philosopher %d has taken a fork\n", ft_time_stamp(philo->args),philo->num);
+        ft_print(philo, 0);
+        if(philo->args->nphilo == 1)
+            return(1);
         pthread_mutex_lock(philo->forks[0]);
-        printf("%li Philosopher %d has taken a fork\n", ft_time_stamp(philo->args),philo->num);
+        ft_print(philo, 0);
     }
+    return(0);
 }
 
 void release_fork(t_philo *philo)
@@ -50,15 +53,11 @@ void release_fork(t_philo *philo)
     if (philo->num < philo->args->nphilo)
     {
         pthread_mutex_unlock(philo->forks[1]);
-        //printf("Philosopher %d has released a fork %d\n", philo->num, philo->num);
         pthread_mutex_unlock(philo->forks[0]);
-        //printf("Philosopher %d has released a fork %d \n", philo->num, philo->num-1);
     }
     else
     {
         pthread_mutex_unlock(philo->forks[0]);
-        //printf("Philosopher %d has released fork %d \n", philo->num, philo->num-1);
         pthread_mutex_unlock(philo->forks[1]);
-        //printf("Philosopher %d has released fork %d\n", philo->num, 0);
     }
 }

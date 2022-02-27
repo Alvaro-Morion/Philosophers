@@ -32,25 +32,52 @@ long int	ft_time_stamp(t_args *args)
 	gettimeofday(&t, NULL);
 	return(ft_diff(t, args->t0));
 }
-/*int main()
+
+void ft_print(t_philo *philo, int type)
 {
-	struct timeval	t0;
-	struct timeval	t1;
-	int pid;
-	pid = fork();
-	if (pid == 0)
+	if(philo->args->end)
+		return;
+	pthread_mutex_lock(philo->args->output);
+	if (type == 0)
+		printf("%li Philosopher %d has taken a fork\n", 
+			ft_time_stamp(philo->args), philo->num);
+	if (type == 1)
+		printf("%li Philosopher %d is eating\n", 
+			ft_time_stamp(philo->args), philo->num);
+	if (type == 2)
+		printf("%li Philosopher %d is sleeping\n", 
+			ft_time_stamp(philo->args), philo->num);
+	if (type == 3)
+		printf("%li Philosopher %d is thinking\n", 
+			ft_time_stamp(philo->args), philo->num);
+	pthread_mutex_unlock(philo->args->output);
+}
+
+void ft_death_meals(t_philo *philo, t_args *args)
+{
+	int i;
+	struct timeval t;
+	while(1)
 	{
-		gettimeofday(&t0, NULL);
-		ft_wait(10);
-		gettimeofday(&t1, NULL);
-		printf("my time: %li\n", ft_diff(t1,t0));
+		i = 0;
+		args->enaugh = 0;
+		gettimeofday(&t, NULL);
+		while(i < args->nphilo)
+		{
+			if(ft_diff(t, philo[i].t_meal) > args->dead_time)
+			{
+				args->end = 1;
+				pthread_mutex_lock(args->output);
+				printf("%li Philosopher %d has died\n", ft_time_stamp(args), philo[i].num);
+				return;
+			}
+			if(args->max_meals > 0 && philo[i].n_meals >= 0)
+				args->enaugh++;
+			i++;
+		}
+		if(args->enaugh == args->nphilo)
+			break;
 	}
-	else
-	{
-		gettimeofday(&t0, NULL);
-		usleep(10);
-		gettimeofday(&t1, NULL);
-		printf("usleep time: %li\n", ft_diff(t1,t0));
-	}
-	return(0);
-}*/
+	args->end = 1;
+	return;
+}
