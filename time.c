@@ -30,7 +30,7 @@ long int	ft_time_stamp(t_args *args)
 {
 	struct timeval	t;
 	gettimeofday(&t, NULL);
-	return(ft_diff(t, args->t0));
+	return(ft_diff(t, args->t0)/1000);
 }
 
 void ft_print(t_philo *philo, int type)
@@ -64,11 +64,11 @@ void ft_death_meals(t_philo *philo, t_args *args)
 		gettimeofday(&t, NULL);
 		while(i < args->nphilo)
 		{
-			if(ft_diff(t, philo[i].t_meal) > args->dead_time)
+			if(ft_diff(t, philo[i].t_meal) > args->dead_time*1000)
 			{
-				args->end = 1;
 				pthread_mutex_lock(args->output);
 				printf("%li Philosopher %d has died\n", ft_time_stamp(args), philo[i].num);
+				args->end = 1;
 				return;
 			}
 			if(args->max_meals > 0 && philo[i].n_meals >= 0)
@@ -76,8 +76,11 @@ void ft_death_meals(t_philo *philo, t_args *args)
 			i++;
 		}
 		if(args->enaugh == args->nphilo)
-			break;
+		{
+			pthread_mutex_lock(args->output);
+			args->end++;
+			return;
+		}
 	}
-	args->end = 1;
 	return;
 }

@@ -26,7 +26,6 @@ typedef struct s_args
 	int				max_meals;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	*output;
-	int				start;
 	int				enaugh;
 	int				end;
 	struct timeval	t0;

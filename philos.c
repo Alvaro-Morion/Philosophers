@@ -17,9 +17,6 @@ void	*ft_routine(void *philos)
 	t_philo *philo;
 	
 	philo = (t_philo *)philos;
-	while(!philo->args->start)
-	{
-	}
 	philo->t_meal = philo->args->t0;
 	while(!philo->args->end)
 	{
@@ -30,11 +27,10 @@ void	*ft_routine(void *philos)
 			ft_print(philo, 1);
 			philo->n_meals++;
 			gettimeofday(&philo->t_meal, NULL);
-			ft_wait(philo->args->eat_time);
-			philo->n_meals++;
+			ft_wait(philo->args->eat_time * 1000);
 			release_fork(philo);
 			ft_print(philo, 2);
-			ft_wait(philo->args->sleep_time);
+			ft_wait(philo->args->sleep_time * 1000);
 			ft_print(philo, 3);
 		}
 	}
@@ -69,8 +65,6 @@ void	ft_philosophers(t_args *args)
 		i++;
 	}
 	gettimeofday(&(args->t0), NULL);
-	args->start++;
-	ft_death_meals(philo, args);
 	i = 0;
 	while (i < args->nphilo)
 	{
