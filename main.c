@@ -43,22 +43,39 @@ int	ft_check_errors(int argc, char **argv)
 
 int	ft_assign_args(int argc, char **argv, t_args *args)
 {
+	pthread_mutex_init(&args->output, NULL);
+	args->forks = ft_create_forks(args->nphilo);
+	if(!args->forks)
+		return(1);
 	args->nphilo = ft_atoi(argv[1]);
 	args->dead_time = ft_atoi(argv[2]);
 	args->eat_time = ft_atoi(argv[3]);
 	args->sleep_time = ft_atoi(argv[4]);
-	args->forks = ft_create_forks(args->nphilo);
-	args->output = malloc(1);
 	args->enaugh = 0;
-	args->end = 0;
-	pthread_mutex_init(args->output, NULL);
-	if(!args->forks)
-		return(1);
 	if (argc == 6)
 		args->max_meals = ft_atoi(argv[5]);
 	else
 		args->max_meals = -1;
 	return(0);
+}
+
+void ft_print_args(t_args *args)
+{
+	int i;
+
+	i = 0;
+	printf("nphilo: %d\n", args->nphilo);
+	printf("dead_time %d\n", args->dead_time);
+	printf("eat_time %d\n", args->eat_time);
+	printf("sleep_time %d\n", args->sleep_time);
+	printf("enaugh %d\n", args->enaugh);
+	printf("max_meals %d\n", args->max_meals);
+	printf("output %p\n", &args->output);
+	while(i < args->nphilo)
+	{
+		printf("Fork %d: %p\n", i, &args->forks[i]);
+		i++;
+	}
 }
 
 int	main(int argc, char **argv)
@@ -67,10 +84,12 @@ int	main(int argc, char **argv)
 
 	if (ft_check_errors(argc, argv))
 		return (0);
-	args = malloc(1);
+	args = (t_args *)malloc(1);
+	if(!args)
+		return(0);
+	args = (t_args *)malloc(1);
 	if(ft_assign_args(argc, argv, args))
 		return(0);
 	ft_philosophers(args);
-
 	return (0);
 }

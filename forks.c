@@ -16,10 +16,8 @@ pthread_mutex_t	*ft_create_forks(int num)
 {
 	pthread_mutex_t	*forks;
 	int i;
-	
-	forks = malloc(num);
-	if(!forks)
-		return(NULL);
+
+	forks = (pthread_mutex_t *)malloc(num);
 	i = 0;
 	while(i < num)
 	{
@@ -52,7 +50,7 @@ int take_fork(t_philo *philo)
 
 void release_fork(t_philo *philo)
 {
-	if (philo->num % 2 == 0)
+	if (philo->num % 2 == 0 || (philo->num == philo->args->nphilo && philo->args->nphilo % 2))
 	{
 		pthread_mutex_unlock(philo->forks[1]);
 		pthread_mutex_unlock(philo->forks[0]);
