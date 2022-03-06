@@ -17,6 +17,7 @@
 # include<pthread.h>
 # include<unistd.h>
 # include<sys/time.h>
+
 typedef struct s_args
 {
 	int				nphilo;
@@ -24,12 +25,17 @@ typedef struct s_args
 	int				eat_time;
 	int				sleep_time;
 	int				max_meals;
-	pthread_mutex_t	*forks;
-	pthread_mutex_t	output;
 	int				enaugh;
 	int				end;
 	struct timeval	t0;
 }	t_args;
+
+typedef struct s_mutex
+{
+	pthread_mutex_t	output;
+	pthread_mutex_t	*m_philo;
+	pthread_mutex_t	*forks;
+}	t_mutex;
 
 typedef struct s_philo
 {
@@ -37,18 +43,17 @@ typedef struct s_philo
 	int				n_meals;
 	struct timeval	t_meal;
 	t_args			*args;
-	pthread_mutex_t *forks[2];
-	pthread_mutex_t m_philo;
+	t_mutex			*mutex;
 }	t_philo;
 
-void 			ft_print_args(t_args *args); //Remove later
 int				ft_atoi(const char *nptr);
-void    		ft_philosophers(t_args *args);
+void			ft_philosophers(t_args *args, t_mutex *mutex);
 pthread_mutex_t	*ft_create_forks(int num);
-int 			take_fork(t_philo *philo);
-void 			release_fork(t_philo *philo);
+int				take_fork(t_philo *philo);
+void			release_fork(t_philo *philo);
 void			ft_wait(long int time, t_args *args);
 long int		ft_time_stamp(t_args *args);
 void			ft_print(t_philo *philo, int type);
-void 			death_meals(t_args *args, t_philo *philo);
+void			death_meals(t_args *args, t_philo *philo, t_mutex *mutex);
+void			free_mutex(t_args *args, t_mutex *mutex);
 #endif

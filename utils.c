@@ -35,3 +35,26 @@ int	ft_atoi(const char *nptr)
 	}
 	return (n * s);
 }
+
+void	free_mutex(t_args * args, t_mutex *mutex)
+{
+	int i;
+
+	pthread_mutex_unlock(&mutex->output);
+	pthread_mutex_destroy(&mutex->output);
+	i = 0;
+	while(i < args->nphilo)
+	{
+		if(mutex->forks)
+			pthread_mutex_destroy(&mutex->forks[i]);
+		if(mutex->m_philo)
+			pthread_mutex_destroy(&mutex->m_philo[i]);
+		i++;
+	}
+	if(mutex->forks)
+		free(mutex->forks);
+	if(mutex->m_philo)
+		free(mutex->m_philo);
+	if(mutex)
+		free(mutex);
+}

@@ -10,54 +10,71 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "philosophers.h"
+#include "philosophers.h"
 
 pthread_mutex_t	*ft_create_forks(int num)
 {
 	pthread_mutex_t	*forks;
-	int i;
+	int				i;
 
-	forks = (pthread_mutex_t *)malloc(num);
+	forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * num);
+	if (!forks)
+		return (NULL);
 	i = 0;
-	while(i < num)
+	while (i < num)
 	{
-		pthread_mutex_init(&forks[i], NULL);
+		if (pthread_mutex_init(&forks[i], NULL))
+			break ;
 		i++;
 	}
-	return(forks);
+	if (i < num)
+	{
+		while (i - 1 >= 0)
+		{
+			pthread_mutex_destroy(&forks[i]);
+			i--;
+		}
+		free(forks);
+		return (NULL);
+	}
+	return (forks);
 }
 
-int take_fork(t_philo *philo)
+int	take_fork(t_philo *philo)
 {
 	if (philo->num % 2 == 0)
 	{
-		pthread_mutex_lock(philo->forks[0]);
+		pthread_mutex_lock(&philo->mutex->forks[philo->num - 1]);
 		ft_print(philo, 0);
-		pthread_mutex_lock(philo->forks[1]);
+		pthread_mutex_lock(&philo->mutex->forks[philo->num
+			% philo->args->nphilo]);
 		ft_print(philo, 0);
 	}
 	else
 	{
-		pthread_mutex_lock(philo->forks[1]);
+		pthread_mutex_lock(&philo->mutex->forks[philo->num
+			% philo->args->nphilo]);
 		ft_print(philo, 0);
-		if(philo->args->nphilo == 1)
-			return(1);
-		pthread_mutex_lock(philo->forks[0]);
+		if (philo->args->nphilo == 1)
+			return (1);
+		pthread_mutex_lock(&philo->mutex->forks[philo->num - 1]);
 		ft_print(philo, 0);
 	}
-	return(0);
+	return (0);
 }
 
-void release_fork(t_philo *philo)
+void	release_fork(t_philo *philo)
 {
-	if (philo->num % 2 == 0 || (philo->num == philo->args->nphilo && philo->args->nphilo % 2))
+	if (philo->num % 2 == 0)
 	{
-		pthread_mutex_unlock(philo->forks[1]);
-		pthread_mutex_unlock(philo->forks[0]);
+		pthread_mutex_unlock(&philo->mutex->forks[philo->num
+			% philo->args->nphilo]);
+		pthread_mutex_unlock(&philo->mutex->forks[philo->num - 1]);
 	}
 	else
 	{
-		pthread_mutex_unlock(philo->forks[0]);
-		pthread_mutex_unlock(philo->forks[1]);
+		pthread_mutex_unlock(&philo->mutex->forks[philo->num - 1]);
+		pthread_mutex_unlock(&philo->mutex->forks[philo->num
+			% philo->args->nphilo]);
 	}
 }
