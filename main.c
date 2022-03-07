@@ -12,11 +12,10 @@
 
 #include "./philosophers.h"
 
-/*void ft_leaks (void)
+void ft_leaks (void)
 {
 	system("leaks philo");
-}*/
-//	atexit(ft_leaks);
+}
 
 int	ft_check_errors(int argc, char **argv)
 {
@@ -94,6 +93,7 @@ int	main(int argc, char **argv)
 	t_args	*args;
 	t_mutex	*mutex;
 
+	atexit(ft_leaks);
 	if (ft_check_errors(argc, argv))
 		return (1);
 	args = ft_assign_args(argc, argv);

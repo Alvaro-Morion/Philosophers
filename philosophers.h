@@ -53,6 +53,7 @@ int				take_fork(t_philo *philo);
 void			release_fork(t_philo *philo);
 void			ft_wait(long int time, t_args *args);
 long int		ft_time_stamp(t_args *args);
+long int		ft_diff(struct timeval t1, struct timeval t0);
 void			ft_print(t_philo *philo, int type);
 void			death_meals(t_args *args, t_philo *philo, t_mutex *mutex);
 void			free_mutex(t_args *args, t_mutex *mutex);

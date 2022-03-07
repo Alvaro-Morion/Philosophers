@@ -31,6 +31,7 @@ void	*ft_routine(void *philos)
 		release_fork(philo);
 		ft_print(philo, 2);
 		ft_wait(philo->args->sleep_time * 1000, philo->args);
+		ft_print(philo, 3);
 		if (!philo->args->end)
 			usleep(100);
 	}
@@ -46,7 +47,26 @@ void	ft_philo_init(t_philo *philo, int pos, t_args *args, t_mutex *mutex)
 	gettimeofday(&philo->t_meal, NULL);
 }
 
-// Too long by 18 lines
+void	ft_philos_threads(t_args *args, t_philo *philo,
+	t_mutex *mutex, pthread_t *philos)
+{
+	int	i;
+
+	i = 0;
+	while (i < args->nphilo)
+	{
+		ft_philo_init(&philo[i], i, args, mutex);
+		i++;
+	}
+	i = 0;
+	gettimeofday(&args->t0, NULL);
+	while (i < args->nphilo)
+	{
+		pthread_create(&philos[i], 0, ft_routine, &philo[i]);
+		i++;
+	}
+}
+
 void	ft_philosophers(t_args *args, t_mutex *mutex)
 {
 	int			i;
@@ -62,19 +82,7 @@ void	ft_philosophers(t_args *args, t_mutex *mutex)
 		free(philo);
 		return ;
 	}
-	i = 0;
-	while (i < args->nphilo)
-	{
-		ft_philo_init(&philo[i], i, args, mutex);
-		i++;
-	}
-	i = 0;
-	gettimeofday(&args->t0, NULL);
-	while (i < args->nphilo)
-	{
-		pthread_create(&philos[i], 0, ft_routine, &philo[i]);
-		i++;
-	}
+	ft_philos_threads(args, philo, mutex, philos);
 	death_meals(args, philo, mutex);
 	i = 0;
 	while (i < args->nphilo)
